@@ -10,6 +10,12 @@ namespace GymManagementBLL.ViewModels.TrainerViewModels
 {
     internal class TrianerToUpdateViewModel
     {
+
+
+
+
+        public string Name { get; set; } = null!;
+        
         [Required(ErrorMessage = "Email Is Required")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Email Must Be Between 5 and 100 Char")]
         [EmailAddress(ErrorMessage = "Invalid Email Format")]

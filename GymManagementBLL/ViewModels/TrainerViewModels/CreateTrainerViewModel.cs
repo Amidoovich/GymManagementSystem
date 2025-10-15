@@ -17,16 +17,16 @@ namespace GymManagementBLL.ViewModels.TrainerViewModels
         [Required(ErrorMessage = "Email Is Required")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Email Must Be Between 5 and 100 Char")]
         [EmailAddress(ErrorMessage = "Invalid Email Format")]
-        [DataType(DataType.EmailAddress)]
+        
         public string Email { get; set; } = null!;
         [Required(ErrorMessage = "Phone Is Required")]
         [Phone(ErrorMessage = "Invalid Phone Format")]
-        [DataType(DataType.PhoneNumber)]
+        
         // \d => digit numbers , {8} => 8 digit Numbers
         [RegularExpression(@"^(010||011||012||015)\d{8}$", ErrorMessage = "Phone Number Must be valid Egyption Phone Number")]
         public string Phone { get; set; } = null!;
         [Required(ErrorMessage = "Date Of Birth Is Required")]
-        [DataType(DataType.Date)]
+       
         public DateOnly DateOfBirth { get; set; }
         [Required(ErrorMessage = "Gender Is Required")]
         public Gender Gender { get; set; }

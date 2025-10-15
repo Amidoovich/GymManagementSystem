@@ -9,6 +9,9 @@ namespace GymManagementBLL.ViewModels.MemberViewModel
 {
     internal class MemberToUpdateViewModel
     {
+        
+        public string? Name { get; set; } 
+        
         [Required(ErrorMessage = "Email Is Required")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Email Must Be Between 5 and 100 Char")]
         [EmailAddress(ErrorMessage = "Invalid Email Format")]

@@ -1,8 +1,14 @@
+using AutoMapper;
+using GymManagementBLL;
 using GymManagementDAL.Data.Contexts;
+using GymManagementDAL.DataSeed;
 using GymManagementDAL.Entities;
 using GymManagementDAL.Repositories.Classes;
 using GymManagementDAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using GymManagementBLL.MappingProfiles;
+
 
 namespace GymMangementPL
 {
@@ -14,18 +20,39 @@ namespace GymMangementPL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<GymDbContext>(options =>
-            {
-                //options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"]);
-                //options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+            //builder.Services.AddDbContext<GymDbContext>(options =>
+            //{
+            //    //options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"]);
+            //    //options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            //});
+            
+            builder.Services.AddDbContext<GymDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             //builder.Services.AddScoped(typeof(IGenericRepostitory<>), typeof(GenericRepostitory<>));
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            var app = builder.Build();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            //builder.Services.AddAutoMapper(typeof(MemberProfile));
 
+
+            var app = builder.Build();
+            #region Seed Data - Migrate DataBase
+
+
+            using var Scoped = app.Services.CreateScope();
+            var dbContext = Scoped.ServiceProvider.GetRequiredService<GymDbContext>();
+            var PendingMigrations = dbContext.Database.GetPendingMigrations();
+            if (PendingMigrations?.Any() ?? false)
+                dbContext.Database.Migrate();
+
+
+
+            GymDbContextDataSeeding.SeedData(dbContext);
+
+
+
+            #endregion
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
