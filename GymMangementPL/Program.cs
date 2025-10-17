@@ -8,6 +8,8 @@ using GymManagementDAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using GymManagementBLL.MappingProfiles;
+using GymManagementBLL.Services.Interfaces;
+using GymManagementBLL.Services.Classes;
 
 
 namespace GymMangementPL
@@ -39,6 +41,7 @@ namespace GymMangementPL
             //builder.Services.AddAutoMapper(typeof(MemberProfile));
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 
             var app = builder.Build();
