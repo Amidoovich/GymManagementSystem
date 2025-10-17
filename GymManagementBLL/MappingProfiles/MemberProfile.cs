@@ -41,7 +41,10 @@ namespace GymManagementBLL.MappingProfiles
             CreateMap<Member, MemberToUpdateViewModel>()
                 .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
-                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City));
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.Photo, opt => opt.Ignore());
+         
+
 
 
 
@@ -50,7 +53,8 @@ namespace GymManagementBLL.MappingProfiles
                 .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street))
                 .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
                 .ForMember(dest => dest.Name, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Photo, opt => opt.Ignore());
 
 
 

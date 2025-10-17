@@ -45,11 +45,16 @@ namespace GymManagementBLL.Services.Classes
 
         public IEnumerable<SessionViewModel> GetAllSessions()
         {
-            var sessions = _unitOfWork.SessionRepository.GetAllSessionsWithTrainersAndCategories();
+            var sessionRepo = _unitOfWork.SessionRepository;
+
+            var sessions = sessionRepo.GetAllSessionsWithTrainersAndCategories();
 
             if (sessions is null || !sessions.Any()) return [];
 
             var MappedSessions = _mapper.Map<IEnumerable<SessionViewModel>>(sessions);
+
+            foreach (var session in MappedSessions)
+                session.AvailableSlots = session.Capacity - sessionRepo.GetCountOfBookedSlots(session.Id);
             
             return MappedSessions;
 
@@ -57,12 +62,19 @@ namespace GymManagementBLL.Services.Classes
 
         public SessionViewModel? GetSessionById(int sessionId)
         {
-            var session = _unitOfWork.SessionRepository.GetSessionWithTrainerAndCategory(sessionId);
+            
+            var sessionRepo = _unitOfWork.SessionRepository;
+            
+            var session = sessionRepo.GetSessionWithTrainerAndCategory(sessionId);
 
 
             if(session is null) return null;
 
-            return _mapper.Map<SessionViewModel>(session);
+            var sessionMapped =  _mapper.Map<SessionViewModel>(session);
+
+            sessionMapped.AvailableSlots = sessionRepo.GetCountOfBookedSlots(sessionId);
+
+            return sessionMapped;
 
         }
 
