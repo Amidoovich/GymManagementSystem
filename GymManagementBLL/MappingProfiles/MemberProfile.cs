@@ -26,17 +26,30 @@ namespace GymManagementBLL.MappingProfiles
             .ForMember(dest => dest.PlanName, options => options.Ignore());
 
 
+            //CreateMap<CreateMemberViewModel, Member>()
+            //    .ForPath(dest => dest.Address.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
+            //    .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street))
+            //    .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
+            //    .ForPath(dest => dest.HealthRecord.BloodType, opt => opt.MapFrom(src => src.HealthRecordViewModel.BloodType))
+            //    .ForPath(dest => dest.HealthRecord.Height, opt => opt.MapFrom(src => src.HealthRecordViewModel.Height))
+            //    .ForPath(dest => dest.HealthRecord.Weight, opt => opt.MapFrom(src => src.HealthRecordViewModel.weight))
+            //    .ForPath(dest => dest.HealthRecord.Note, opt => opt.MapFrom(src => src.HealthRecordViewModel.Note ?? ""));
+
+
             CreateMap<CreateMemberViewModel, Member>()
-                .ForPath(dest => dest.Address.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
-                .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Street))
-                .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City))
-                .ForPath(dest => dest.HealthRecord.BloodType, opt => opt.MapFrom(src => src.HealthRecordViewModel.BloodType))
-                .ForPath(dest => dest.HealthRecord.Height, opt => opt.MapFrom(src => src.HealthRecordViewModel.Height))
-                .ForPath(dest => dest.HealthRecord.Weight, opt => opt.MapFrom(src => src.HealthRecordViewModel.weight))
-                .ForPath(dest => dest.HealthRecord.Note, opt => opt.MapFrom(src => src.HealthRecordViewModel.Note ?? ""));
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src))
+                .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecordViewModel));
+                
+
+            CreateMap<CreateMemberViewModel, Address>()
+                .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.BuildingNumber))
+                .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City));
 
 
-            CreateMap<HealthRecord, HealthRecordViewModel>();
+            CreateMap<HealthRecord, HealthRecordViewModel>().ReverseMap();
+
+
 
             CreateMap<Member, MemberToUpdateViewModel>()
                 .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber))
