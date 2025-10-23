@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using GymManagementBLL.MappingProfiles;
 using GymManagementBLL.Services.Interfaces;
 using GymManagementBLL.Services.Classes;
+using Microsoft.AspNetCore.Hosting.Builder;
 
 
 namespace GymMangementPL
@@ -42,6 +43,8 @@ namespace GymMangementPL
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<ITrainerService, TrainerService>();
 
 
             var app = builder.Build();

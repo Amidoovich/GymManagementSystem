@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementBLL.Services.Classes
 {
-    internal class TrainerService : ITrainerService
+    public class TrainerService : ITrainerService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -112,19 +112,17 @@ namespace GymManagementBLL.Services.Classes
             {
                 if (updateTrianer == null) return false;
                 var TrainerRepo = _unitOfWork.GetRepository<Trainer>();
+
                 var trainer = TrainerRepo.GetById(id);
 
-                if(trainer is null ||IsEmailExists(updateTrianer.Email) || IsPhoneExists(updateTrianer.Phone)) return false;
+                var IsEmailExists = TrainerRepo.GetAll(T => T.Email == updateTrianer.Email && T.Id != id ).Any();
+                var IsPhoneExists = TrainerRepo.GetAll(T => T.Phone == updateTrianer.Phone && T.Id != id ).Any();
 
-                trainer = _mapper.Map<Trainer>(updateTrianer);
+                if (trainer is null || IsEmailExists || IsPhoneExists) return false;
 
-                //trainer.Email = updateTrianer.Email;
-                //trainer.Phone = updateTrianer.Phone;
-                //trainer.Address.BuildingNumber = updateTrianer.BuildingNumber;
-                //trainer.Address.Street = updateTrianer.Street;
-                //trainer.Address.City = updateTrianer.City;
-                //trainer.Specialties = updateTrianer.Specialties;
-                trainer.UpdatedAt = DateTime.Now;
+                _mapper.Map(updateTrianer, trainer);
+
+
 
                 TrainerRepo.Update(trainer);
 
