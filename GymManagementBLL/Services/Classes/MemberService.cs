@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementBLL.Services.Classes
 {
-    internal class MemberService : IMemberService
+    public class MemberService : IMemberService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -119,7 +119,13 @@ namespace GymManagementBLL.Services.Classes
             try
             {
 
-                if (IsEmailExists(memberToUpdate.Email) || IsPhoneExists(memberToUpdate.Phone)) return false;
+                var EmailExists = _unitOfWork.GetRepository<Member>()
+                    .GetAll(member => member.Email == memberToUpdate.Email && member.Id != id).Any();
+
+                var PhoneExists = _unitOfWork.GetRepository<Member>()
+                    .GetAll(member => member.Phone == memberToUpdate.Phone && member.Id != id).Any();
+
+                if (EmailExists || PhoneExists) return false;
 
 
                 var _memberRepository = _unitOfWork.GetRepository<Member>();
@@ -130,8 +136,9 @@ namespace GymManagementBLL.Services.Classes
 
 
 
-                member = _mapper.Map<Member>(memberToUpdate);
-                member.UpdatedAt = DateTime.Now;
+                _mapper.Map(memberToUpdate, member);
+
+
 
 
 
@@ -157,7 +164,11 @@ namespace GymManagementBLL.Services.Classes
 
                 if (member == null) return false;
 
-                var HasActiveMemberSession = _unitOfWork.GetRepository<MemberSession>().GetAll(MS => MS.MemberId == member.Id && MS.Session.StartDate > DateTime.Now).Any();
+                var SessionIds = _unitOfWork.GetRepository<MemberSession>().GetAll(X => X.MemberId == memberId).Select(X => X.SessionId);
+
+                var HasActiveMemberSession = _unitOfWork.GetRepository<Session>().GetAll(X => SessionIds.Contains(X.Id) && X.StartDate > DateTime.Now).Any();
+
+
 
                 if (HasActiveMemberSession) return false;
 

@@ -21,8 +21,8 @@ namespace GymManagementBLL.MappingProfiles
 
 
             CreateMap<UpdatePlanViewModel, Plan>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PlanName))
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
+                .ForMember(dest => dest.Name, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom( src => DateTime.Now));
 
         }
     }
