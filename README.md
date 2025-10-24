@@ -106,24 +106,6 @@ The system uses **ASP.NET Identity** for authentication and authorization:
 - Entity Framework Core Migrations  
 - AutoMapper  
 
----
 
-## 🏁 How to Run the Project
-1. Open the project using **Visual Studio 2022**  
-2. Update the database connection string in `appsettings.json`  
-3. Run the EF migration command:
-   ```bash
-   dotnet ef database update
-   ```
-4. Run the project using IIS Express or Kestrel  
-5. Navigate to:
-   ```
-   https://localhost:xxxx
-   ```
 
----
 
-## 👨‍💻 Author
-**Developed by:** [Ahmed Samy]  
-**Role:** .NET Core Software Engineer  
-**Contact:** [AhmedSamy1Ami@gmail.com]
