@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementBLL.Services.Classes
 {
-    internal class SessionService : ISessionService
+    public class SessionService : ISessionService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -98,7 +98,7 @@ namespace GymManagementBLL.Services.Classes
                 if (!IsTainerExists(updateSession.TrainerId) || !IsSessionAvailableForUpdating(session) || !IsValidDateRange(session.StartDate,session.EndDate)) return false;
 
 
-                session = _mapper.Map<Session>(updateSession);
+                _mapper.Map(updateSession,session);
                 session.UpdatedAt = DateTime.Now;
 
                 _unitOfWork.SessionRepository.Update(session);
@@ -132,6 +132,25 @@ namespace GymManagementBLL.Services.Classes
 
 
         }
+
+        public IEnumerable<TrainerSelectViewModel> GetAllTrainersForDropDown()
+        {
+            var trainers = _unitOfWork.GetRepository<Trainer>().GetAll();
+
+            if (trainers is null) return [];
+
+            return _mapper.Map<IEnumerable<TrainerSelectViewModel>>(trainers);
+        }
+
+        public IEnumerable<CategorySelectViewModel> GetAllCategoriesForDropDown()
+        {
+            var Categries = _unitOfWork.GetRepository<Category>().GetAll();
+
+            if (Categries is null) return [];
+
+            return _mapper.Map<IEnumerable<CategorySelectViewModel>>(Categries);
+        }
+
         #region Helper Methods
 
 
@@ -184,7 +203,8 @@ namespace GymManagementBLL.Services.Classes
             return true;
         }
 
-       
+
+
 
         #endregion
 

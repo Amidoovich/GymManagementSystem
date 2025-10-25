@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementBLL.ViewModels.SessionViewModels
 {
-    internal class SessionToUpdateViewModel
+    public class SessionToUpdateViewModel
     {
         [Required(ErrorMessage = "Trainer is Required")]
         [Display(Name = "Trainer")]
