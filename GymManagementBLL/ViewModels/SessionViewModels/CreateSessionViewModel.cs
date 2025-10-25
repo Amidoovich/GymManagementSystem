@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementBLL.ViewModels.SessionViewModels
 {
-    internal class CreateSessionViewModel
+    public class CreateSessionViewModel
     {
         [Required(ErrorMessage = "Category is Required")]
         [Display(Name = "Category")]
