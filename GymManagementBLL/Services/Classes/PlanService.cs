@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementBLL.Services.Classes
 {
-    internal class PlanService : IPlanService
+    public class PlanService : IPlanService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -103,7 +103,7 @@ namespace GymManagementBLL.Services.Classes
 
                 if (Plan is null || HasActiveMemberShips(planId)) return false;
 
-                Plan = _mapper.Map<Plan>(updatePlan);
+                _mapper.Map(updatePlan,Plan);
              
 
 
