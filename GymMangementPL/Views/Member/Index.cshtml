@@ -8,7 +8,7 @@
 {
     <div id="Alert" class="alert alert-success alert-dismissible fade show">
         <i class="bi bi-check-circle-fill me-2"></i>
-        Member Created Successfully
+        @TempData["SuccessMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
@@ -65,7 +65,7 @@
                                     }
                                     else
                                     {
-                                        <img src="~/images/@Member.Photo" alt="Default Avatar" class="rounded-circle"
+                                        <img src="~/images/Members/@Member.Photo" alt="Default Avatar" class="rounded-circle"
                                              style="width: 40px; height: 40px;" />
                                     }
 
