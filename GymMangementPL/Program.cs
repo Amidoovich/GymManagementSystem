@@ -11,6 +11,8 @@ using GymManagementBLL.MappingProfiles;
 using GymManagementBLL.Services.Interfaces;
 using GymManagementBLL.Services.Classes;
 using Microsoft.AspNetCore.Hosting.Builder;
+using GymManagementBLL.AttachmentService;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace GymMangementPL
@@ -47,7 +49,23 @@ namespace GymMangementPL
             builder.Services.AddScoped<ITrainerService, TrainerService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                config.Password.RequiredLength = 6;
+                config.Password.RequireLowercase = true;
+                config.Password.RequireUppercase = true;
+                config.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<GymDbContext>();
 
+
+            builder.Services.ConfigureApplicationCookie(opt =>
+            {
+                opt.LoginPath = "/Account/Login";
+                opt.AccessDeniedPath = "/Account/AccessDenied";
+                opt.LogoutPath = "/Account/Logout";
+            });
 
             var app = builder.Build();
             #region Seed Data - Migrate DataBase
@@ -55,6 +73,8 @@ namespace GymMangementPL
 
             using var Scoped = app.Services.CreateScope();
             var dbContext = Scoped.ServiceProvider.GetRequiredService<GymDbContext>();
+            var roleManager = Scoped.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = Scoped.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var PendingMigrations = dbContext.Database.GetPendingMigrations();
             if (PendingMigrations?.Any() ?? false)
                 dbContext.Database.Migrate();
@@ -62,6 +82,7 @@ namespace GymMangementPL
 
 
             GymDbContextDataSeeding.SeedData(dbContext);
+            IdentityDbContextSeeding.SeedData(roleManager, userManager);
 
 
 
@@ -76,13 +97,13 @@ namespace GymMangementPL
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Account}/{action=Login}/{id?}")
                 .WithStaticAssets();
 
             app.Run();
